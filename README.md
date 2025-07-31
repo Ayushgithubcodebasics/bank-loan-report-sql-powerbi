@@ -94,6 +94,7 @@ The Power BI solution consists of three interactive pages:
 
 ---
 
-## Author & Contact
+## Contact
 
-**Ayush Butoliya** Email: ayushbutoliya22@gmail.com
+**Ayush Butoliya** 
+Email: ayushbutoliya22@gmail.com
