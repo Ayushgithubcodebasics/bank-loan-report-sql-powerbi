@@ -1,0 +1,433 @@
+# Bank Loan Report - SQL Queries and Results
+
+## A. Summary KPIs
+
+### Loan Applications
+
+#### Total Loan Applications
+```sql
+SELECT COUNT(id) AS Total_Applications 
+FROM bank_loan_data;
+```
+**Result:** 38,576
+
+#### MTD Loan Applications
+```sql
+SELECT COUNT(id) AS Total_Applications 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12;
+```
+**Result:** 4,314
+
+#### PMTD Loan Applications
+```sql
+SELECT COUNT(id) AS Total_Applications 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 11;
+```
+**Result:** 4,035
+
+---
+
+### Funded Amounts
+
+#### Total Funded Amount
+```sql
+SELECT SUM(loan_amount) AS Total_Funded_Amount 
+FROM bank_loan_data;
+```
+**Result:** $435,757,075
+
+#### MTD Total Funded Amount
+```sql
+SELECT SUM(loan_amount) AS Total_Funded_Amount 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12;
+```
+**Result:** $54,011,200
+
+#### PMTD Total Funded Amount
+```sql
+SELECT SUM(loan_amount) AS Total_Funded_Amount 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 11;
+```
+**Result:** $47,754,825
+
+---
+
+### Amount Received
+
+#### Total Amount Received
+```sql
+SELECT SUM(total_payment) AS Total_Amount_Collected 
+FROM bank_loan_data;
+```
+**Result:** $473,070,933
+
+#### MTD Total Amount Received
+```sql
+SELECT SUM(total_payment) AS Total_Amount_Collected 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12;
+```
+**Result:** $58,074,380
+
+#### PMTD Total Amount Received
+```sql
+SELECT SUM(total_payment) AS Total_Amount_Collected 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 11;
+```
+**Result:** $50,929,489
+
+---
+
+### Interest Rates
+
+#### Average Interest Rate
+```sql
+SELECT AVG(int_rate)*100 AS Avg_Int_Rate 
+FROM bank_loan_data;
+```
+**Result:** 12.05%
+
+#### MTD Average Interest Rate
+```sql
+SELECT AVG(int_rate)*100 AS MTD_Avg_Int_Rate 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12;
+```
+**Result:** 12.36%
+
+#### PMTD Average Interest Rate
+```sql
+SELECT AVG(int_rate)*100 AS PMTD_Avg_Int_Rate 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 11;
+```
+**Result:** 11.94%
+
+---
+
+### Debt-to-Income Ratio
+
+#### Average DTI
+```sql
+SELECT AVG(dti)*100 AS Avg_DTI 
+FROM bank_loan_data;
+```
+**Result:** 13.33%
+
+#### MTD Average DTI
+```sql
+SELECT AVG(dti)*100 AS MTD_Avg_DTI 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12;
+```
+**Result:** 13.67%
+
+#### PMTD Average DTI
+```sql
+SELECT AVG(dti)*100 AS PMTD_Avg_DTI 
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 11;
+```
+**Result:** 13.10%
+
+---
+
+### Good Loan Analysis
+
+#### Good Loan Percentage
+```sql
+SELECT
+    (COUNT(CASE WHEN loan_status = 'Fully Paid' OR loan_status = 'Current' THEN id END) * 100.0) /
+    COUNT(id) AS Good_Loan_Percentage
+FROM bank_loan_data;
+```
+**Result:** 86.18%
+
+#### Good Loan Applications
+```sql
+SELECT COUNT(id) AS Good_Loan_Applications 
+FROM bank_loan_data
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current';
+```
+**Result:** 33,243
+
+#### Good Loan Funded Amount
+```sql
+SELECT SUM(loan_amount) AS Good_Loan_Funded_amount 
+FROM bank_loan_data
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current';
+```
+**Result:** $370,224,850
+
+#### Good Loan Amount Received
+```sql
+SELECT SUM(total_payment) AS Good_Loan_amount_received 
+FROM bank_loan_data
+WHERE loan_status = 'Fully Paid' OR loan_status = 'Current';
+```
+**Result:** $435,786,170
+
+---
+
+### Bad Loan Analysis
+
+#### Bad Loan Percentage
+```sql
+SELECT
+    (COUNT(CASE WHEN loan_status = 'Charged Off' THEN id END) * 100.0) /
+    COUNT(id) AS Bad_Loan_Percentage
+FROM bank_loan_data;
+```
+**Result:** 13.82%
+
+#### Bad Loan Applications
+```sql
+SELECT COUNT(id) AS Bad_Loan_Applications 
+FROM bank_loan_data
+WHERE loan_status = 'Charged Off';
+```
+**Result:** 5,333
+
+#### Bad Loan Funded Amount
+```sql
+SELECT SUM(loan_amount) AS Bad_Loan_Funded_amount 
+FROM bank_loan_data
+WHERE loan_status = 'Charged Off';
+```
+**Result:** $65,532,225
+
+#### Bad Loan Amount Received
+```sql
+SELECT SUM(total_payment) AS Bad_Loan_amount_received 
+FROM bank_loan_data
+WHERE loan_status = 'Charged Off';
+```
+**Result:** $37,284,763
+
+---
+
+### Loan Status Summary
+
+#### Overall Loan Status
+```sql
+SELECT
+    loan_status,
+    COUNT(id) AS LoanCount,
+    SUM(total_payment) AS Total_Amount_Received,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    AVG(int_rate * 100) AS Interest_Rate,
+    AVG(dti * 100) AS DTI
+FROM bank_loan_data
+GROUP BY loan_status;
+```
+
+| Loan Status | Loan Count | Total Amount Received | Total Funded Amount | Interest Rate | DTI |
+|-------------|------------|----------------------|---------------------|---------------|-----|
+| Current | 1,098 | $15,307,395 | $18,913,400 | 15.12% | 15.06% |
+| Fully Paid | 32,145 | $411,777,600 | $351,358,450 | 11.64% | 13.16% |
+| Charged Off | 5,333 | $37,284,763 | $65,532,225 | 13.88% | 13.89% |
+
+#### MTD Loan Status
+```sql
+SELECT
+    loan_status,
+    SUM(total_payment) AS MTD_Total_Amount_Received,
+    SUM(loan_amount) AS MTD_Total_Funded_Amount
+FROM bank_loan_data
+WHERE MONTH(issue_date) = 12
+GROUP BY loan_status;
+```
+
+| Loan Status | MTD Total Amount Received | MTD Total Funded Amount |
+|-------------|--------------------------|-------------------------|
+| Current | $1,800,825 | $2,333,300 |
+| Fully Paid | $53,317,350 | $47,903,100 |
+| Charged Off | $2,956,205 | $3,774,800 |
+
+---
+
+## B. Overview Analysis
+
+### Monthly Analysis
+```sql
+SELECT
+    MONTH(issue_date) AS Month_Number,
+    DATENAME(MONTH, issue_date) AS Month_name,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY MONTH(issue_date), DATENAME(MONTH, issue_date)
+ORDER BY MONTH(issue_date);
+```
+
+| Month # | Month Name | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|---------|------------|------------------------|--------------------|--------------------|
+| 1 | January | 2,362 | $24,584,800 | $26,413,500 |
+| 2 | February | 2,622 | $28,296,550 | $30,446,525 |
+| 3 | March | 2,725 | $30,705,900 | $33,251,550 |
+| 4 | April | 2,794 | $32,105,950 | $34,942,025 |
+| 5 | May | 3,056 | $35,704,675 | $38,884,425 |
+| 6 | June | 3,204 | $37,229,550 | $40,478,550 |
+| 7 | July | 3,213 | $37,506,450 | $40,764,950 |
+| 8 | August | 3,451 | $41,176,600 | $44,733,550 |
+| 9 | September | 3,508 | $42,456,675 | $46,134,200 |
+| 10 | October | 3,747 | $44,590,300 | $48,508,275 |
+| 11 | November | 4,035 | $47,754,825 | $50,929,489 |
+| 12 | December | 4,314 | $54,011,200 | $58,074,380 |
+
+---
+
+### State Analysis
+```sql
+SELECT
+    address_state AS State,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY address_state
+ORDER BY address_state;
+```
+
+| State | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|-------|------------------------|--------------------|--------------------|
+| AK | 79 | $1,036,575 | $1,136,550 |
+| AL | 656 | $7,840,650 | $8,595,325 |
+| AR | 416 | $4,874,125 | $5,334,850 |
+| AZ | 1,597 | $19,652,400 | $21,346,725 |
+| CA | 6,776 | $85,691,900 | $92,990,525 |
+| CO | 1,024 | $13,348,375 | $14,525,250 |
+| CT | 745 | $9,301,675 | $10,095,975 |
+| DC | 76 | $1,083,000 | $1,179,400 |
+| DE | 164 | $2,103,225 | $2,294,500 |
+
+---
+
+### Term Analysis
+```sql
+SELECT
+    term AS Term,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY term
+ORDER BY term;
+```
+
+| Term | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|------|------------------------|--------------------|--------------------|
+| 36 months | 28,237 | $290,598,800 | $336,909,600 |
+| 60 months | 10,339 | $145,158,275 | $136,161,333 |
+
+---
+
+### Employee Length Analysis
+```sql
+SELECT
+    emp_length AS Employee_Length,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY emp_length
+ORDER BY emp_length;
+```
+
+| Employee Length | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|-----------------|------------------------|--------------------|--------------------|
+| < 1 year | 4,576 | $50,866,550 | $55,317,150 |
+| 1 year | 4,229 | $47,013,975 | $51,125,925 |
+| 2 years | 4,319 | $50,349,925 | $54,733,325 |
+| 3 years | 4,055 | $46,510,550 | $50,599,150 |
+| 4 years | 3,440 | $39,554,450 | $43,001,725 |
+| 5 years | 3,282 | $37,640,875 | $40,929,950 |
+| 6 years | 2,220 | $25,397,450 | $27,612,550 |
+| 7 years | 1,900 | $21,775,225 | $23,680,325 |
+| 8 years | 1,479 | $16,978,950 | $18,465,075 |
+| 9 years | 1,267 | $14,516,350 | $15,784,775 |
+| 10+ years | 8,545 | $85,152,750 | $91,821,000 |
+
+---
+
+### Purpose Analysis
+```sql
+SELECT
+    purpose AS PURPOSE,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY purpose
+ORDER BY purpose;
+```
+
+| Purpose | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|---------|------------------------|--------------------|--------------------|
+| car | 1,399 | $15,230,850 | $16,560,575 |
+| credit_card | 4,911 | $58,790,975 | $63,890,325 |
+| debt_consolidation | 18,154 | $231,880,500 | $251,822,750 |
+| educational | 320 | $3,221,550 | $3,505,575 |
+| home_improvement | 2,857 | $33,215,075 | $36,113,350 |
+| house | 368 | $4,303,650 | $4,679,325 |
+| major_purchase | 2,157 | $22,736,725 | $24,721,550 |
+| medical | 651 | $6,923,975 | $7,531,325 |
+| moving | 559 | $6,013,050 | $6,541,575 |
+| other | 3,924 | $39,576,175 | $43,018,800 |
+| renewable_energy | 96 | $1,041,875 | $1,133,525 |
+| small_business | 563 | $6,709,700 | $7,299,825 |
+| vacation | 348 | $3,516,000 | $3,825,575 |
+| wedding | 931 | $9,596,950 | $10,431,425 |
+
+---
+
+### Home Ownership Analysis
+```sql
+SELECT
+    home_ownership AS Home_Ownership,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+GROUP BY home_ownership
+ORDER BY home_ownership;
+```
+
+| Home Ownership | Total Loan Applications | Total Funded Amount | Total Amount Received |
+|----------------|------------------------|--------------------|--------------------|
+| MORTGAGE | 17,198 | $200,389,950 | $217,712,950 |
+| OTHER | 105 | $1,153,950 | $1,256,075 |
+| OWN | 2,830 | $32,076,725 | $34,875,550 |
+| RENT | 18,443 | $202,136,450 | $219,226,358 |
+
+---
+
+### Filtered Analysis Example
+
+#### Purpose Analysis Filtered by Grade A
+```sql
+SELECT
+    purpose AS PURPOSE,
+    COUNT(id) AS Total_Loan_Applications,
+    SUM(loan_amount) AS Total_Funded_Amount,
+    SUM(total_payment) AS Total_Amount_Received
+FROM bank_loan_data
+WHERE grade = 'A'
+GROUP BY purpose
+ORDER BY purpose;
+```
+## Key Insights
+
+- **Total Portfolio**: 38,576 loan applications totaling $435.7M in funded amount
+- **Performance**: 86.18% good loans vs 13.82% bad loans
+- **Growth**: Consistent month-over-month growth with December showing highest activity
+- **Geography**: California leads with 6,776 applications, followed by Texas (3,927) and New York (3,120)
+- **Purpose**: Debt consolidation dominates with 47% of all applications
+- **Terms**: 73% of loans are 36-month terms vs 27% 60-month terms
+- **Employment**: 22% of borrowers have 10+ years experience, showing stable employment base
