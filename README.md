@@ -70,7 +70,7 @@ The Power BI solution consists of three interactive pages:
 - **Overview:** A deep-dive page with dynamic charts and cross-filtering capabilities for granular analysis.
 - **Details:** A tabular view for examining individual loan records.
 
-![Bank Loan Dashboard](<img width="1321" height="736" alt="bank-loan-report-summary" src="https://github.com/user-attachments/assets/f22aeee6-f161-4903-9125-50c582b25cd6" />)
+![Bank Loan Dashboard](images/bank-loan-report-summary.png)
 
 ## How to Run This Project
 
