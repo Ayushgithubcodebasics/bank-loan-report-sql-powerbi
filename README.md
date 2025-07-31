@@ -23,7 +23,17 @@ In the financial sector, effective risk management and portfolio monitoring are 
 
 ## Project Structure
 
-bank-loan-analysis/├── README.md├── dashboard/│   └── bank_loan_report.pbix├── sql_queries/│   └── analysis_queries.sql└── data/└── bank_loan_data.csv
+bank-loan-analysis/
+├── dashboard/
+│   └── Bank Loan Report_Power BI.pbix     
+├── images/
+│   ├── bank-loan-report-details.png       
+│   ├── bank-loan-report-overview.png      
+│   └── bank-loan-report-summary.png       
+├── sql-queries/
+│   └── report-results                      
+└── README.md                              
+
 ## Data Cleaning & Preparation
 
 - **Database Connection:** Connected Power BI directly to the MS SQL Server database to ensure a single source of truth.
