@@ -22,17 +22,16 @@ In the financial sector, effective risk management and portfolio monitoring are 
 - **Version Control:** GitHub
 
 ## Project Structure
-
-bank-loan-analysis
-├── dashboard
-│   └── Bank Loan Report_Power BI.pbix     
-├── images
-│   ├── bank-loan-report-details.png       
-│   ├── bank-loan-report-overview.png      
-│   └── bank-loan-report-summary.png       
-├── sql-queries
-│   └── report-results                      
-└── README.md                              
+bank-loan-analysis/
+├── dashboard/
+│   └── Bank Loan Report_Power BI.pbix
+├── images/
+│   ├── bank-loan-report-details.png
+│   ├── bank-loan-report-overview.png
+│   └── bank-loan-report-summary.png
+├── sql-queries/
+│   └── report-results
+└── README.md                          
 
 ## Data Cleaning & Preparation
 
