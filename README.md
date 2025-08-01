@@ -96,6 +96,6 @@ The Power BI solution consists of three interactive pages:
 ---
 
 ## Contact
-
 **Ayush Butoliya** 
+
 Email: ayushbutoliya22@gmail.com
